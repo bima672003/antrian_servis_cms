@@ -169,6 +169,19 @@ return [
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
 
+        'oracle' => [
+        'driver'         => 'oracle',
+        'tns'            => env('DB_TNS', ''),
+        'host'           => env('DB_HOST', 'localhost'),
+        'port'           => env('DB_PORT', '1521'),
+        'database'       => env('DB_DATABASE', 'xe'),
+        'username'       => env('DB_USERNAME', 'system'),
+        'password'       => env('DB_PASSWORD', 'password'),
+        'charset'        => 'AL32UTF8',
+        'prefix'         => '',
+        'prefix_schema'  => env('DB_SCHEMA_PREFIX', ''),
+    ],
+
     ],
 
 ];
