@@ -9,3 +9,9 @@ Route::get('/pegawai/{id}/edit', [PegawaiController::class, 'edit']);
 Route::post('/pegawai/{id}/update', [PegawaiController::class, 'update']);
 Route::get('/pegawai/{id}/delete', [PegawaiController::class, 'destroy']);
 Route::resource('pegawai', PegawaiController::class);
+
+use App\Http\Controllers\PelangganController;
+
+Route::resource('pelanggan', PelangganController::class);
+Route::get('/pelanggan/create', [PelangganController::class, 'create']);
+Route::post('/pelanggan', [PelangganController::class, 'store']);
