@@ -14,7 +14,9 @@ class Antrian extends Model
         'jenis_kendaraan',
         'merek_kendaraan',
         'jenis_servis',
-        'waktu',
         'biaya'
     ];
+    
+
+    public $timestamps = true; // aktifkan auto created_at & updated_at
 }

@@ -21,8 +21,9 @@ class AntrianController extends Controller
 
     $antrians = $query->get();
 
-    return view('antrian', compact('antrians'));
+    return view('antrian.index', compact('antrians'));
 }
+
 
 public function destroy($id)
 {
@@ -38,36 +39,30 @@ public function edit($id)
     return view('antrian', compact('antrian', 'antrians'));
 }
 
+public function store(Request $request)
+{
+    $request->validate([
+        'nomor_antrian' => 'required',
+        'tanggal' => 'required|date',
+        'status' => 'nullable|string',
+    ]);
+
+    Antrian::create($request->all());
+
+    return redirect()->route('antrian.index')->with('success', 'Antrian berhasil ditambahkan.');
+}
+
 public function update(Request $request, $id)
 {
     $request->validate([
-        'nama' => 'required',
-        'jenis_kendaraan' => 'required',
-        'merek_kendaraan' => 'required',
-        'jenis_servis' => 'required',
-        'waktu' => 'required',
-        'biaya' => 'required|numeric',
+        'nomor_antrian' => 'required',
+        'tanggal' => 'required|date',
+        'status' => 'nullable|string',
     ]);
 
     $antrian = Antrian::findOrFail($id);
     $antrian->update($request->all());
 
-    return redirect('/antrian')->with('success', 'Data berhasil diperbarui!');
+    return redirect()->route('antrian.index')->with('success', 'Antrian berhasil diupdate.');
 }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required',
-            'jenis_kendaraan' => 'required',
-            'merek_kendaraan' => 'required',
-            'jenis_servis' => 'required',
-            'waktu' => 'required',
-            'biaya' => 'required|numeric',
-        ]);
-
-        Antrian::create($request->all());
-
-        return redirect()->back()->with('success', 'Antrian berhasil ditambahkan!');
-    }
 }

@@ -4,71 +4,63 @@ namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
 use Illuminate\Http\Request;
+use App\Models\Antrian;
 
 class PelangganController extends Controller
 {
-    // Menampilkan daftar pelanggan
     public function index()
     {
-        $pelanggan = Pelanggan::all();
-        return view('pelanggan.index', compact('pelanggan'));
+        $pelanggans = Pelanggan::all();
+        return view('pelanggans.index', compact('pelanggans'));
     }
 
-    // Menampilkan form untuk menambah pelanggan
     public function create()
     {
-        return view('pelanggan.create');
+        return view('pelanggans.create');
     }
+ 
 
-    // Menyimpan data pelanggan baru
-    public function store(Request $request)
+public function store(Request $request)
 {
-    $validated = $request->validate([
-        'nama' => 'required|max:255',
+    $request->validate([
+        'nama' => 'required',
+        'alamat' => 'required',
         'no_hp' => 'required',
-        'alamat' => 'nullable',
     ]);
 
-    Pelanggan::create($validated);
+    $pelanggan = Pelanggan::create($request->all());
 
-    return redirect('/pelanggan')->with('message', 'Pelanggan berhasil ditambahkan');
+    // Tambahkan ke tabel antrian setelah pelanggan dibuat
+    Antrian::create([
+        'pelanggan_id' => $pelanggan->id,
+        'status' => 'menunggu'
+    ]);
+
+    return redirect()->route('pelanggans.index')->with('success', 'Pelanggan berhasil ditambahkan dan dimasukkan ke antrian.');
 }
-    // Menampilkan detail pelanggan
-    public function show($id)
+
+
+    public function edit(Pelanggan $pelanggan)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.show', compact('pelanggan'));
+        return view('pelanggans.edit', compact('pelanggan'));
     }
 
-    // Menampilkan form untuk mengedit pelanggan
-    public function edit($id)
+    public function update(Request $request, Pelanggan $pelanggan)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.edit', compact('pelanggan'));
-    }
-
-    // Memperbarui data pelanggan
-    public function update(Request $request, $id)
-    {
-        $pelanggan = Pelanggan::findOrFail($id);
-
-        $validated = $request->validate([
-            'nama' => 'required|max:255',
+        $request->validate([
+            'nama' => 'required',
+            'alamat' => 'required',
             'no_hp' => 'required',
-            'alamat' => 'nullable',
         ]);
 
-        $pelanggan->update($validated);
+        $pelanggan->update($request->all());
 
-        return redirect('/pelanggan')->with('message', 'Pelanggan berhasil diperbarui');
+        return redirect()->route('pelanggans.index')->with('success', 'Pelanggan berhasil diperbarui.');
     }
 
-    // Menghapus data pelanggan
-    public function destroy($id)
+    public function destroy(Pelanggan $pelanggan)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
         $pelanggan->delete();
-
-        return redirect('/pelanggan')->with('message', 'Pelanggan berhasil dihapus');
+        return redirect()->route('pelanggans.index')->with('success', 'Pelanggan berhasil dihapus.');
     }
 }

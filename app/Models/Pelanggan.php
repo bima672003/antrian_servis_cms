@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pelanggan extends Model
 {
-    use HasFactory;
-
     protected $fillable = ['nama', 'no_hp', 'alamat'];
+
+    public function transaksis()
+    {
+        return $this->hasMany(Transaksi::class);
+    }
 }
